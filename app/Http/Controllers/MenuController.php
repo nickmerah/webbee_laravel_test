@@ -94,6 +94,21 @@ class MenuController extends BaseController
 
     public function getMenuItems() {
         
-        $menuitems = MenuItem::all();
+       $menuitems = MenuItem::all();
+
+        $children = $menuitems
+                ->filter(
+                    fn(MenuItem $child) => Str::contains($child->url, $menuitems->url) 
+                );
+
+        return response()->json([
+            'id' => $menuitems->id,
+            'name' => $menuitems->name,
+            'url' => $menuitems->url,
+            'parent_id' => $menuitems->parent_id,
+            'created_at' => $menuitems->created_at,
+            'updated_at' => $menuitems->updated_at,
+            'children' => $children
+        ]);
     }
 }
